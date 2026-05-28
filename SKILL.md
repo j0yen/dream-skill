@@ -103,7 +103,7 @@ Then continue with the rest of Phase 1:
 - `ls ~/wintermute/` — what repos exist; pick the relevant ones and
   skim their `README.md` and `src/lib.rs` to know the real shape
 - `ls ~/.claude/skills/` and `ls ~/.local/bin/` — existing tooling
-- `ctrace ls` then `ctrace summary <latest>` — what actually ran
+- `ctrace status` for active tracer sessions, then `ctrace query --since 24h` for what actually ran (note: `ctrace` subcommands are `start|stop|status|query|tail`; there is no `ls` or `summary`)
 - `wchg list` then `wchg since <watched-dir>` for each — where the
   laptop has actually been changing this week. (Note `wchg since` is
   consuming: if `self-review` is the only thing meant to advance the
