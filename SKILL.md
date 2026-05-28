@@ -77,11 +77,31 @@ what the user actually wants — sometimes it's not the topic they named.
 Probe the laptop for what's actually there. Don't just read passively;
 play with it.
 
+**Step 1 — Seed the dream from recall (mandatory).** Before doing
+anything else in this phase, query recall for ideation seeds. This is
+not optional; the dreaming Claude shows itself unrelated to the user's
+recent thinking when this step is skipped.
+
+The recall store uses `<kind>/<context>` subjects. `--kind` filters
+the kind axis; `--subject <substr>` filters by substring across both.
+
+- `recall list --kind reflective --limit 20` — recent self-observations
+  and half-formed thoughts (the "things I noticed but didn't act on"
+  bucket — often the next PRD)
+- `recall list --kind procedural --subject project --limit 20` —
+  current project-state procedural notes
+- `recall list --kind semantic --limit 20` — domain knowledge accrued
+  across sessions (when a kernel primitive lands, an experiment closes)
+- If a topic was given: `recall query "<topic>" --limit 20 --hybrid`
+  — semantic match against the topic phrase
+- Always: `recall query "ideas observations todo half-built notes" --limit 15 --hybrid`
+  — generic ideation-flavored memories (use --hybrid so the BGE
+  embedder catches paraphrases the FTS5 layer misses)
+
+Then continue with the rest of Phase 1:
+
 - `ls ~/wintermute/` — what repos exist; pick the relevant ones and
   skim their `README.md` and `src/lib.rs` to know the real shape
-- `recall --subject self --limit 30` — recent self-observations
-- `recall --subject project --limit 30` — current project state
-- `recall --subject feedback --limit 30` — what the user has corrected
 - `ls ~/.claude/skills/` and `ls ~/.local/bin/` — existing tooling
 - `ctrace ls` then `ctrace summary <latest>` — what actually ran
 - `wchg list` then `wchg since <watched-dir>` for each — where the
