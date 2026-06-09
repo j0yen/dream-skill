@@ -1,6 +1,7 @@
 ---
 name: dream
 description: Craft PRDs from vision. Listen to the user, research what's actually happening on this laptop, develop a coherent vision, then write a fleet of PRDs that build the vision out piece by piece. Partners with /build via a shared gossip channel at ~/wintermute/autobuilder/notes/gossip.md. Use when the user says /dream, /dream <topic>, asks Claude to "imagine the next batch of PRDs," "sketch out a vision for X," or wants to expand the autobuilder queue from a high-level idea.
+model: opus
 ---
 
 # /dream — vision into PRDs
