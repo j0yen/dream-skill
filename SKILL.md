@@ -53,6 +53,10 @@ peers; the gossip file is where they become their best together.
 
 ## Phases
 
+- **Phase 0 — Listen** — gather context before generating
+- **Phase 0.5 — Check the field** — fallow gate before research (exit 0 → proceed; exit 1 → rest or escalate)
+- **Phase 1 — Research** — probe the laptop for what's actually there
+
 ### Phase 0 — Listen
 
 Enter the dreaming with full context, never from a cold start.
@@ -72,6 +76,25 @@ read:
 
 Sit with this before generating. The point of listening is to notice
 what the user actually wants — sometimes it's not the topic they named.
+
+### Phase 0.5 — Check the field
+
+Before running the full research walk, check whether the inward signal has moved:
+
+1. Run `fallow check --json`.
+   - **Exit 0 (fresh):** the evidence has moved. Proceed to Phase 1 as normal.
+   - **Exit 1 (fallow), `escalate` is false:** the field is saturated. Do NOT walk Phases 1–3. Append a **one-line** gossip note: `/dream fallow — field unchanged (streak=K); rested` where K is the streak count from the JSON output. End this pass.
+   - **Exit 1 (fallow), `escalate` is true:** the streak has crossed the threshold.
+     - **Interactive session:** surface the outward-steer question to the user via `AskUserQuestion` with these options: (1) homeward — work on the lost-pets vision; (2) constellation — work on the fleet buildout; (3) companion-kin — imagine what a peer intelligence would want from this box; (4) name a topic. This is a built-in step, not a model-discretion choice.
+     - **Non-interactive (timer-fired):** append a one-line gossip note: `/dream fallow — streak=K threshold crossed; needs user steer` and end this pass cheaply.
+   - **Exit 2 (error) or binary missing:** treat as `fresh` and proceed to Phase 1. This wire must never *block* dreaming because the tool isn't installed yet.
+2. **At the end of every pass** — whether drafting or resting — call:
+   `fallow record --drafted <N> --seed <seed> --note <vision-slug-or-"none">`
+   so the ledger and streak stay current. N=0 on a rested/fallow pass.
+
+**Exit-code contract:** `fallow check` exits 0 (fresh), 1 (fallow), 2 (error/unknown). The `--json` output includes at least `{"fallow": bool, "streak": int, "escalate": bool}`.
+
+**Resilience:** if `fallow` is not on `$PATH`, skip this phase entirely and proceed as fresh. Document this fallback explicitly in the phase text.
 
 ### Phase 1 — Research
 
@@ -307,6 +330,7 @@ Dream marks fulfilled visions on next invocation by cross-referencing
    (Updated 2026-05-27: commits + pushes from /dream are now the
    default per Phase 5, not user-gated. The identity rule still
    applies to every such commit.)
+8. **Check the field first.** A saturated field (`fallow check` exits 1) means rest, not a thinner fleet of PRDs. Never draft past `fallow check`. A missing `fallow` binary is treated as fresh — the gate must never prevent dreaming.
 
 ## Disable
 
