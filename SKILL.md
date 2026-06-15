@@ -228,6 +228,9 @@ Don't draft past what you've actually thought through. If component
 seven is hand-wavy, write components one through six and leave seven as
 a bullet in the vision doc for the next /dream pass.
 
+# After each PRD file is written:
+# answerable-emit.sh draft <prd-path> "vision-<slug>" true
+
 ### Phase 4 — Gossip
 
 Append to `~/wintermute/autobuilder/notes/gossip.md`:
@@ -261,6 +264,9 @@ can read it and act.
   `~/wintermute/autobuilder/` are public-by-design; lag adds no review
   value. If a specific draft genuinely shouldn't ship yet, give it a
   `.draft.md` suffix and exclude it from the staged set.
+
+  # After git push origin main:
+  # answerable-emit.sh draft-push <repo> "dream: <N> PRDs + <M> visions from <seed>" true
 
 ## State files
 
