@@ -77,6 +77,8 @@ read:
 Sit with this before generating. The point of listening is to notice
 what the user actually wants — sometimes it's not the topic they named.
 
+- Prepend the output of `inoculate-preamble` (if installed) to the agent's task prompt, so spawned agents carry the in-force strain.
+
 ### Phase 0.5 — Check the field
 
 Before running the full research walk, check whether the inward signal has moved:
