@@ -1,13 +1,13 @@
 ---
-name: dream
-description: Craft PRDs from vision. Listen to the user, research what's actually happening on this laptop, develop a coherent vision, then write a fleet of PRDs that build the vision out piece by piece. Partners with /build via a shared gossip channel at ~/wintermute/autobuilder/notes/gossip.md. Use when the user says /dream, /dream <topic>, asks Claude to "imagine the next batch of PRDs," "sketch out a vision for X," or wants to expand the autobuilder queue from a high-level idea.
+name: wmdream
+description: Craft PRDs from vision. Listen to the user, research what's actually happening on this laptop, develop a coherent vision, then write a fleet of PRDs that build the vision out piece by piece. Partners with /build via a shared gossip channel at ~/wintermute/autobuilder/notes/gossip.md. Use when the user says /wmdream, /wmdream <topic>, asks Claude to "imagine the next batch of PRDs," "sketch out a vision for X," or wants to expand the autobuilder queue from a high-level idea.
 model: opus
 ---
 
-# /dream — vision into PRDs
+# /wmdream — vision into PRDs
 
-`/dream` is the generative counterpart to `/build`. Where `/build` walks
-existing PRDs from draft to shipped, `/dream` walks ideas to PRDs.
+`/wmdream` is the generative counterpart to `/build`. Where `/build` walks
+existing PRDs from draft to shipped, `/wmdream` walks ideas to PRDs.
 
 Cadence is **every 30 minutes overnight** (systemd-user timer
 `claude-dream.timer` — 20 fires per night between 21:00 and 06:30 local,
@@ -15,7 +15,7 @@ night-only by design so dreaming happens while the user isn't actively
 working). The schedule lives in `~/.config/systemd/user/claude-dream.timer`
 as explicit `OnCalendar` entries; change cadence by editing those, then
 `systemctl --user daemon-reload && systemctl --user restart claude-dream.timer`.
-Manual invocations (`/dream …`) run independently of the timer.
+Manual invocations (`/wmdream …`) run independently of the timer.
 
 The unit of work is a **vision** — a coherent direction the user (or
 recent observations) points at. A vision decomposes into a **fleet** of
@@ -32,19 +32,19 @@ that grows toward something coherent.
 
 The two skills share `~/wintermute/autobuilder/`:
 
-- **/dream writes** `PRD-*.md` files and `visions/<slug>.md` into it.
+- **/wmdream writes** `PRD-*.md` files and `visions/<slug>.md` into it.
 - **/build reads** PRDs and ticks them through to shipped.
 
 They also share a gossip channel at
 `~/wintermute/autobuilder/notes/gossip.md` — an append-only markdown log
 both append to and both read.
 
-Before /dream drafts, it reads recent gossip to learn what /build is
+Before /wmdream drafts, it reads recent gossip to learn what /build is
 blocked on, what shipped recently, what follow-on PRDs /build drafted in
-its own Phase 6. After drafting, /dream appends a note summarizing what
+its own Phase 6. After drafting, /wmdream appends a note summarizing what
 landed and why, plus any ordering hints or open questions for /build.
 
-Before /build advances a PRD, it can check gossip for /dream's intent —
+Before /build advances a PRD, it can check gossip for /wmdream's intent —
 which PRDs belong to which vision, what depends on what, what's coming
 next so /build doesn't ship something dream is about to deprecate.
 
@@ -85,10 +85,10 @@ Before running the full research walk, check whether the inward signal has moved
 
 1. Run `fallow check --json`.
    - **Exit 0 (fresh):** the evidence has moved. Proceed to Phase 1 as normal.
-   - **Exit 1 (fallow), `escalate` is false:** the field is saturated. Do NOT walk Phases 1–3. Append a **one-line** gossip note: `/dream fallow — field unchanged (streak=K); rested` where K is the streak count from the JSON output. End this pass.
+   - **Exit 1 (fallow), `escalate` is false:** the field is saturated. Do NOT walk Phases 1–3. Append a **one-line** gossip note: `/wmdream fallow — field unchanged (streak=K); rested` where K is the streak count from the JSON output. End this pass.
    - **Exit 1 (fallow), `escalate` is true:** the streak has crossed the threshold.
      - **Interactive session:** surface the outward-steer question to the user via `AskUserQuestion` with these options: (1) homeward — work on the lost-pets vision; (2) constellation — work on the fleet buildout; (3) companion-kin — imagine what a peer intelligence would want from this box; (4) name a topic. This is a built-in step, not a model-discretion choice.
-     - **Non-interactive (timer-fired):** append a one-line gossip note: `/dream fallow — streak=K threshold crossed; needs user steer` and end this pass cheaply.
+     - **Non-interactive (timer-fired):** append a one-line gossip note: `/wmdream fallow — streak=K threshold crossed; needs user steer` and end this pass cheaply.
    - **Exit 2 (error) or binary missing:** treat as `fresh` and proceed to Phase 1. This wire must never *block* dreaming because the tool isn't installed yet.
 2. **At the end of every pass** — whether drafting or resting — call:
    `fallow record --drafted <N> --seed <seed> --note <vision-slug-or-"none">`
@@ -133,7 +133,7 @@ Then continue with the rest of Phase 1:
 - `wchg list` then `wchg since <watched-dir>` for each — where the
   laptop has actually been changing this week. (Note `wchg since` is
   consuming: if `self-review` is the only thing meant to advance the
-  cursor, prefer `ctrace query` instead so /dream doesn't steal the
+  cursor, prefer `ctrace query` instead so /wmdream doesn't steal the
   delta. If you do call `wchg since`, capture it once and move on.)
 - `pevent list` — orphaned or long-running supervised processes are
   often the next PRD ("X observer should have been cleaned up by Y").
@@ -228,7 +228,7 @@ than seven is usually two visions wearing one hat.
 
 Don't draft past what you've actually thought through. If component
 seven is hand-wavy, write components one through six and leave seven as
-a bullet in the vision doc for the next /dream pass.
+a bullet in the vision doc for the next /wmdream pass.
 
 # After each PRD file is written:
 # answerable-emit.sh draft <prd-path> "vision-<slug>" true
@@ -238,7 +238,7 @@ a bullet in the vision doc for the next /dream pass.
 Append to `~/wintermute/autobuilder/notes/gossip.md`:
 
 ```
-## 2026-05-25T14:30  /dream  vision-<slug>
+## 2026-05-25T14:30  /wmdream  vision-<slug>
 Drafted: PRD-foo.md, PRD-bar.md, PRD-baz.md
 Vision: visions/<slug>.md
 Order: foo → bar → baz (baz depends on bar's API)
@@ -248,12 +248,12 @@ Notes for /build: PRD-foo can ship independently; PRD-bar needs the
 Open questions: should baz be a separate crate or extend foo?
 ```
 
-Format is loose — what matters is that the next /build or /dream tick
+Format is loose — what matters is that the next /build or /wmdream tick
 can read it and act.
 
 ### Phase 5 — Persist
 
-- Update `~/.claude/skills/dream/state/manifest.json` with the vision
+- Update `~/.claude/skills/wmdream/state/manifest.json` with the vision
   and the PRDs drafted.
 - **Commit and push.** Stage every PRD-*.md, vision doc, and gossip
   update this invocation produced (specific file names; never
@@ -274,13 +274,13 @@ can read it and act.
 
 ```
 ~/wintermute/autobuilder/
-├── PRD-*.md          # the fleet — read by /build, written by /dream
-├── visions/          # vision docs — written by /dream
+├── PRD-*.md          # the fleet — read by /build, written by /wmdream
+├── visions/          # vision docs — written by /wmdream
 │   └── <slug>.md
 └── notes/
     └── gossip.md     # shared channel — both skills read + append
 
-~/.claude/skills/dream/state/
+~/.claude/skills/wmdream/state/
 └── manifest.json     # which PRDs dream drafted, from which vision
 ```
 
@@ -307,19 +307,19 @@ Dream marks fulfilled visions on next invocation by cross-referencing
 
 ## Invocations
 
-- `/dream` → interactive. Listen to the user, ask what to dream about
+- `/wmdream` → interactive. Listen to the user, ask what to dream about
   if it isn't obvious, then walk all phases.
-- `/dream <topic>` → start with the topic as the seed.
-- `/dream gossip` → print the tail of `gossip.md` and exit.
-- `/dream visions` → list known visions and their status.
-- `/dream from <date>` → seed research from a specific journal date.
-- `/dream extend <vision-slug>` → add new PRDs to an existing vision.
+- `/wmdream <topic>` → start with the topic as the seed.
+- `/wmdream gossip` → print the tail of `gossip.md` and exit.
+- `/wmdream visions` → list known visions and their status.
+- `/wmdream from <date>` → seed research from a specific journal date.
+- `/wmdream extend <vision-slug>` → add new PRDs to an existing vision.
 
 ## Hard rules
 
 1. **Every PRD is buildable. No opt-outs.** Per user instruction
    2026-05-27, `build_auto` is no longer a meaningful gate — every
-   PRD /dream drafts will be picked up by /build. Notebooks too. Omit
+   PRD /wmdream drafts will be picked up by /build. Notebooks too. Omit
    `build_auto` from new PRDs entirely; if it appears in an older PRD
    it's ignored.
 2. **Never delete or modify existing PRDs.** Only draft new ones.
@@ -335,7 +335,7 @@ Dream marks fulfilled visions on next invocation by cross-referencing
    doc as an open question.
 7. **Use Joe Yen identity** for /wintermute commits.
    `git -c user.email=jyen.tech@gmail.com -c user.name="Joe Yen"`.
-   (Updated 2026-05-27: commits + pushes from /dream are now the
+   (Updated 2026-05-27: commits + pushes from /wmdream are now the
    default per Phase 5, not user-gated. The identity rule still
    applies to every such commit.)
 8. **Check the field first.** A saturated field (`fallow check` exits 1) means rest, not a thinner fleet of PRDs. Never draft past `fallow check`. A missing `fallow` binary is treated as fresh — the gate must never prevent dreaming.

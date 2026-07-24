@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# install.sh — install the dream Claude Code skill.
+# install.sh — install the wmdream Claude Code skill.
 #
 # Two modes:
 #   1. Repo-local: invoked as `./install.sh` from a checkout of
-#      j0yen/dream-skill. Symlinks ~/.claude/skills/dream/ to this
+#      j0yen/wmwmdream-skill. Symlinks ~/.claude/skills/wmdream/ to this
 #      script's parent dir.
 #   2. Curl-piped: invoked as `curl ... | bash`. No checkout exists;
-#      script self-clones the repo into ~/.local/share/dream-skill/,
+#      script self-clones the repo into ~/.local/share/wmwmdream-skill/,
 #      then runs mode 1 against that clone.
 #
 # state/ inside the skill is runtime state and stays git-ignored;
@@ -14,7 +14,7 @@
 
 set -euo pipefail
 
-TARGET="$HOME/.claude/skills/dream"
+TARGET="$HOME/.claude/skills/wmdream"
 
 # --- Mode detection ---------------------------------------------------
 SCRIPT_PATH="${BASH_SOURCE[0]:-$0}"
@@ -25,10 +25,10 @@ fi
 
 if [ -z "$SCRIPT_DIR" ] || [ ! -f "$SCRIPT_DIR/SKILL.md" ]; then
   # Mode 2: curl|bash. Self-clone.
-  echo "→ no local checkout detected; self-cloning j0yen/dream-skill..."
+  echo "→ no local checkout detected; self-cloning j0yen/wmwmdream-skill..."
   command -v git >/dev/null 2>&1 || { echo "fatal: git not found"; exit 1; }
 
-  CLONE_ROOT="${DREAM_SKILL_CLONE_ROOT:-$HOME/.local/share/dream-skill}"
+  CLONE_ROOT="${WMDREAM_SKILL_CLONE_ROOT:-$HOME/.local/share/wmwmdream-skill}"
   mkdir -p "$(dirname "$CLONE_ROOT")"
 
   if [ -d "$CLONE_ROOT/.git" ]; then
@@ -37,7 +37,7 @@ if [ -z "$SCRIPT_DIR" ] || [ ! -f "$SCRIPT_DIR/SKILL.md" ]; then
     git -C "$CLONE_ROOT" reset --hard origin/main
   else
     echo "→ clone into $CLONE_ROOT"
-    git clone --depth 1 https://github.com/j0yen/dream-skill.git "$CLONE_ROOT"
+    git clone --depth 1 https://github.com/j0yen/wmwmdream-skill.git "$CLONE_ROOT"
   fi
 
   SCRIPT_DIR="$CLONE_ROOT"
@@ -77,7 +77,7 @@ if [ -n "$RESCUE_STATE" ]; then
   echo "→ restored state/ into $SCRIPT_DIR/state/"
 fi
 
-echo "✓ /dream skill installed."
+echo "✓ /wmdream skill installed."
 echo
 echo "The skill is meant to run on an overnight cadence via systemd-user timer."
 echo "Timer unit installation is NOT done by this script — see the README."

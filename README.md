@@ -1,14 +1,14 @@
-# dream-skill
+# wmdream-skill
 
-A Claude Code skill that turns a direction into a fleet of buildable PRDs. `/dream` is the generative half of an autonomous loop: where `/build` walks existing PRDs to shipped repos, `/dream` walks ideas to PRDs.
+A Claude Code skill that turns a direction into a fleet of buildable PRDs. `/wmdream` is the generative half of an autonomous loop: where `/build` walks existing PRDs to shipped repos, `/wmdream` walks ideas to PRDs.
 
-The two skills are peers, not a pipeline with a boss. `/dream` listens to the user and to what is actually happening on the host, synthesizes a coherent vision, and decomposes it into PRD-sized pieces — each citing the evidence that motivated it. `/build` picks those up and ships them. They share a working directory and an append-only gossip log, and that shared channel is the whole trick: `/dream` reads what `/build` is blocked on before it drafts, and `/build` reads `/dream`'s intent before it ships, so neither one ships something the other is about to deprecate.
+The two skills are peers, not a pipeline with a boss. `/wmdream` listens to the user and to what is actually happening on the host, synthesizes a coherent vision, and decomposes it into PRD-sized pieces — each citing the evidence that motivated it. `/build` picks those up and ships them. They share a working directory and an append-only gossip log, and that shared channel is the whole trick: `/wmdream` reads what `/build` is blocked on before it drafts, and `/build` reads `/wmdream`'s intent before it ships, so neither one ships something the other is about to deprecate.
 
 It is designed to run overnight on a 30-minute cadence — night-only by design, so the dreaming happens while the user isn't working — but every invocation also runs fine by hand.
 
 ## What a pass does
 
-`/dream` never generates from a cold start. A pass walks a fixed sequence:
+`/wmdream` never generates from a cold start. A pass walks a fixed sequence:
 
 1. **Listen** — the user's prompt, the tail of the gossip log, the last few days of journal, `CLAUDE_SELF.md`, `/build`'s manifest, existing visions.
 2. **Check the field** — a `fallow` gate. If the inward signal hasn't moved since the last pass, rest instead of drafting a thinner fleet. (A missing `fallow` binary is treated as fresh — the gate never blocks dreaming.)
@@ -20,10 +20,10 @@ It is designed to run overnight on a 30-minute cadence — night-only by design,
 ## Install
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/j0yen/dream-skill/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/j0yen/wmwmdream-skill/main/install.sh | bash
 ```
 
-The installer self-clones into `~/.local/share/dream-skill/` and symlinks `~/.claude/skills/dream/` to it. Run from a checkout (`./install.sh`) instead and it symlinks that directory directly. Either way it backs up an existing non-symlink target, and rescues runtime `state/` across re-installs.
+The installer self-clones into `~/.local/share/wmwmdream-skill/` and symlinks `~/.claude/skills/wmdream/` to it. Run from a checkout (`./install.sh`) instead and it symlinks that directory directly. Either way it backs up an existing non-symlink target, and rescues runtime `state/` across re-installs.
 
 ## Repo layout
 
@@ -40,18 +40,18 @@ The installer self-clones into `~/.local/share/dream-skill/` and symlinks `~/.cl
 
 ## Working directory
 
-`/dream` and `/build` both operate against a shared working directory — typically `~/wintermute/autobuilder/` — where PRDs (`PRD-*.md`), vision docs (`visions/<slug>.md`), and the gossip channel (`notes/gossip.md`) live. The skill reads and writes there; it does not create the directory.
+`/wmdream` and `/build` both operate against a shared working directory — typically `~/wintermute/autobuilder/` — where PRDs (`PRD-*.md`), vision docs (`visions/<slug>.md`), and the gossip channel (`notes/gossip.md`) live. The skill reads and writes there; it does not create the directory.
 
 ## Invocations
 
 | Invocation | Does |
 |---|---|
-| `/dream` | Interactive — listen, ask what to dream about if it isn't obvious, walk all phases |
-| `/dream <topic>` | Seed the pass with a topic |
-| `/dream gossip` | Print the tail of `gossip.md` and exit |
-| `/dream visions` | List known visions and their status |
-| `/dream from <date>` | Seed research from a specific journal date |
-| `/dream extend <slug>` | Add new PRDs to an existing vision |
+| `/wmdream` | Interactive — listen, ask what to dream about if it isn't obvious, walk all phases |
+| `/wmdream <topic>` | Seed the pass with a topic |
+| `/wmdream gossip` | Print the tail of `gossip.md` and exit |
+| `/wmdream visions` | List known visions and their status |
+| `/wmdream from <date>` | Seed research from a specific journal date |
+| `/wmdream extend <slug>` | Add new PRDs to an existing vision |
 
 ## Timer setup
 
@@ -59,7 +59,7 @@ This installer does not install the systemd-user timer. The overnight cadence li
 
 ## See also
 
-- [j0yen/build-skill](https://github.com/j0yen/build-skill) — the implementation counterpart that picks up the PRDs `/dream` drafts and ships them.
+- [j0yen/build-skill](https://github.com/j0yen/build-skill) — the implementation counterpart that picks up the PRDs `/wmdream` drafts and ships them.
 
 ## License
 
