@@ -70,6 +70,12 @@ read:
 - The last 3 days of `~/brain/journal/YYYY-MM-DD.md`
   (what's been happening)
 - `~/.claude/CLAUDE_SELF.md` (how Claude operates here)
+- `~/.claude/skills/wintermute-technical-reference/SKILL.md` — the verified
+  systems-engineering reference for this box (kernel surfaces, bus contract,
+  daemon pattern, toolkit contracts, loop state, failure catalog). Read the
+  sections relevant to the seed; cite its gotchas instead of rediscovering
+  them, and if Phase 1 research contradicts it, trust the probe and note the
+  drift in the PRD.
 - `~/.claude/skills/build/state/manifest.json`
   (what's queued, in-flight, shipped)
 - `~/wintermute/autobuilder/visions/` (what visions already exist)
